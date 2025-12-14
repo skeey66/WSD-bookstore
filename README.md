@@ -128,9 +128,9 @@ JWT_REFRESH_EXPIRES_DAYS=7
 ## 5) 배포 주소 (JCloud)
 > JCloud는 포트 리다이렉션이 적용되어 **외부 포트(`<EXTERNAL_PORT>`)**로 접속한다.
 
-- Base URL: `http://<JCLOUD_IP>:<EXTERNAL_PORT>`
-- Swagger URL: `http://<JCLOUD_IP>:<EXTERNAL_PORT>/swagger-ui/index.html`
-- Health URL: `http://<JCLOUD_IP>:<EXTERNAL_PORT>/actuator/health`
+- Base URL: `http://113.198.66.68:10224`
+- Swagger URL: `http://113.198.66.68:10224/swagger-ui/index.html`
+- Health URL: `http://113.198.66.68:10224/actuator/health`
 
 ---
 
