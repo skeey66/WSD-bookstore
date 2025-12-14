@@ -83,9 +83,6 @@ $env:JWT_SECRET="change_me_super_secret"
 ./gradlew flywayMigrate
 ```
 
-> ✅ 주의: 이미 적용된 마이그레이션 파일(`src/main/resources/db/migration/V*__*.sql`)을 수정하면  
-> **checksum mismatch**가 발생할 수 있습니다. 수정 대신 **새 버전(Vxx) 마이그레이션 추가**를 권장합니다.
-
 #### 5) 서버 실행
 ```bash
 ./gradlew bootRun
