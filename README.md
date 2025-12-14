@@ -193,9 +193,9 @@ JWT_REFRESH_EXPIRES_DAYS=7
 
 ## 8) 예제 계정
 > 제출용 테스트 계정 예시 (seed 데이터 구성에 맞게 수정 가능)
+- USER: user1@example.com / (비밀번호는 Classroom 제출 파일 참고)
+- ADMIN: admin@example.com / (비밀번호는 Classroom 제출 파일 참고)
 
-- USER: `user1@example.com / P@ssw0rd!`
-- ADMIN: `admin@example.com / P@ssw0rd!`
   - ⚠️ ADMIN 계정은 **도서 등록/수정/삭제, 관리자 API** 실행에 사용
 
 ---
