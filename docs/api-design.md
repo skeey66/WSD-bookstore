@@ -9,7 +9,7 @@
 
 ### 1) Base URL
 - Local: `http://localhost:8080`
-- JCloud: `http://<JCLOUD_IP>:<EXTERNAL_PORT>`
+- JCloud: `http://113.198.66.68:10224`
 
 > 본 프로젝트는 별도 `/api/v1` 프리픽스를 강제하지 않으며, 실제 경로는 Swagger 기준으로 확인합니다.
 
