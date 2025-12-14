@@ -1,0 +1,594 @@
+{
+	"info": {
+		"_postman_id": "f33f9abe-75b7-4f43-bdf3-d8285514cd81",
+		"name": "WSD2 BookstoreAssign2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49079290",
+		"_collection_link": "https://skeey66-3390440.postman.co/workspace/e6597115-9fca-40e8-8bbd-dcedb1fd7cf2/collection/49079290-f33f9abe-75b7-4f43-bdf3-d8285514cd81?action=share&source=collection_link&creator=49079290"
+	},
+	"item": [
+		{
+			"name": "00. Health",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('health 200', function () {",
+							"  pm.expect(pm.response.code).to.equal(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/actuator/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"actuator",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "01. Auth - Login (USER)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('login user 200', function () {",
+							"  pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"const data = pm.response.json();",
+							"pm.environment.set('userAccessToken', data.accessToken);",
+							"pm.environment.set('userRefreshToken', data.refreshToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02. Books - List (Public)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('books list 200', function () {",
+							"  pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"const data = pm.response.json();",
+							"pm.expect(data.content).to.be.an('array');",
+							"if (data.content && data.content.length > 0 && data.content[0].id != null) {",
+							"  pm.environment.set('bookId', data.content[0].id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/books?page=0&size=10&sort=createdAt,desc",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "sort",
+							"value": "createdAt,desc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03. Books - Get Not Found (404)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('book not found 404', function () {",
+							"  pm.expect(pm.response.code).to.equal(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/books/99999999",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books",
+						"99999999"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04. Auth - Refresh (Unknown token -> 401)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('refresh unknown token 401', function () {",
+							"  pm.expect(pm.response.code).to.equal(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"refreshToken\": \"THIS_IS_NOT_A_VALID_REFRESH_TOKEN\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/refresh",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "05. Auth - Login (ADMIN)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('login admin 200', function () {",
+							"  pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"const data = pm.response.json();",
+							"pm.environment.set('adminAccessToken', data.accessToken);",
+							"pm.environment.set('adminRefreshToken', data.refreshToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "06. Admin - Create Book (ADMIN) -> save bookId",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"title\", \"Postman Book \" + Date.now());\r",
+							"pm.environment.set(\"isbn\", \"978\" + String(Date.now()).slice(-10)); // 13자리 유니크\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"create book 200/201\", function () {",
+							"  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							"",
+							"if ([200, 201].includes(pm.response.code)) {",
+							"  const data = pm.response.json();",
+							"  pm.environment.set(\"bookId\", data.id ?? data.bookId);",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{adminAccessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"{{title}}\",\n  \"publisher\": \"한빛미디어\",\n  \"summary\": \"Postman에서 생성한 테스트 도서입니다.\",\n  \"publicationYear\": 2024,\n  \"price\": 15000,\n  \"stock\": 10,\n  \"isbn\": \"{{isbn}}\"\n}\n"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/books",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "07. Wishlist - Add (USER) -> 200/201",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const bookId = pm.environment.get('bookId');",
+							"pm.test('bookId is set (from books list or create)', function () {",
+							"  pm.expect(bookId, 'bookId must not be empty').to.be.ok;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('wishlist add success 200/201', function () {",
+							"  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{userAccessToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/wishlist/me/{{bookId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"wishlist",
+						"me",
+						"{{bookId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "08. Wishlist - Duplicate Add (USER) -> 409",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const bookId = pm.environment.get('bookId');",
+							"pm.test('bookId is set (from books list or create)', function () {",
+							"  pm.expect(bookId, 'bookId must not be empty').to.be.ok;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('wishlist duplicate 409', function () {",
+							"  pm.expect(pm.response.code).to.equal(409);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{userAccessToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/wishlist/me/{{bookId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"wishlist",
+						"me",
+						"{{bookId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "09. Admin - List Users (as USER) -> 403",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('user forbidden 403', function () {",
+							"  pm.expect(pm.response.code).to.equal(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{userAccessToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/admin/users?page=0&size=10&sort=id,desc",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "sort",
+							"value": "id,desc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10. Admin - List Users (as ADMIN) -> 200",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('admin list users 200', function () {",
+							"  pm.expect(pm.response.code).to.equal(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{adminAccessToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/admin/users?page=0&size=10&sort=id,desc",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "sort",
+							"value": "id,desc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "11. Auth - Logout (USER) -> 204/200",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('logout 204/200', function () {",
+							"  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{userAccessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"refreshToken\": \"{{userRefreshToken}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/logout",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "12. Auth - Refresh after Logout -> 401",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('refresh after logout 401', function () {",
+							"  pm.expect(pm.response.code).to.equal(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"refreshToken\": \"{{userRefreshToken}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/refresh",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
